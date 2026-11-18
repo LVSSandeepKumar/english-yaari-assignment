@@ -11,6 +11,7 @@ import { errorMiddleware } from "./middleware/error.middleware.js";
 
 // Route imports
 import userRoutes from "./routes/user.routes.js";
+import sessionRoutes from "./routes/session.routes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/user", userRoutes);
+app.use("/api/session", sessionRoutes);
 
 // Health API endpoint
 app.get("/health", (req: Request, res: Response) => {

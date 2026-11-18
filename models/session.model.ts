@@ -1,4 +1,5 @@
-import { HydratedDocument, Schema, model, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
+import type { ObjectId, HydratedDocument } from "mongoose";
 
 export enum SessionStatus {
   AVAILABLE = "AVAILABLE",

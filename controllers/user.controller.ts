@@ -3,7 +3,6 @@ import { createUser } from "../services/user.service.js";
 
 export async function createUserController(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log("We came to controller"); 
     const payload = req.body;
 
     const result = await createUser(payload);
