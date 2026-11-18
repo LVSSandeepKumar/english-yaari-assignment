@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 export const connectDB = async (): Promise<void> => {
   const uri = process.env.MONGO_URI;
-  console.log("URI is", uri);
 
   if (!uri) {
     throw new Error("MONGO_URI is not defined in .env");

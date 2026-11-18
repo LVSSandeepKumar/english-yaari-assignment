@@ -1,4 +1,4 @@
-import { ClientError } from "../../config/clientError";
+import { ClientError } from "../../config/clientError.js";
 
 export function throwClientError(
   condition: any,
