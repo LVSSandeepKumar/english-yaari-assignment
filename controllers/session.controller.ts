@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { bookSession, createSession, findAvailableSessions } from "../services/session.service.js";
+import { bookSession, completeSession, createSession, findAvailableSessions } from "../services/session.service.js";
 import { throwClientError } from "../utils/error/throwClientError.js";
 
 export async function createSessionController(req: Request, res: Response, next: NextFunction) {
@@ -54,6 +54,21 @@ export async function bookSessionController(req: Request, res: Response, next: N
     res.status(200).json({
       success: true,
       message: "Session booked successfully",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function completeSessionController(req: Request, res: Response, next: NextFunction) {
+  try {
+    let sessionId = req.params.id;
+
+    const result = await completeSession(sessionId);
+    res.status(200).json({
+      success: true,
+      message: "Session completed successfully",
       data: result,
     });
   } catch (error) {

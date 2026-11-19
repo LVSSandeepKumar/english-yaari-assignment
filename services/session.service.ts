@@ -98,3 +98,25 @@ export async function bookSession(sessionId: string, userId: string) {
   const result = await SessionModel.updateOne({ _id: sessionId }, { status: "BOOKED", userId });
   return result;
 }
+
+export async function completeSession(sessionId: string) {
+  throwClientError(
+    !sessionId || typeof sessionId !== "string" || !new Types.ObjectId(sessionId),
+    "Invalid sessionId",
+    400,
+    "INVALID_PAYLOAD",
+  );
+
+  const existingSession = await SessionModel.findById(sessionId);
+  throwClientError(!existingSession, "Session not found", 404, "SESSION_NOT_FOUND");
+
+  throwClientError(
+    existingSession?.status !== "BOOKED",
+    "Sorry the session you are trying to complete is either already completed or not booked yet. Please verify",
+    400,
+    "INVALID_SESSION",
+  );
+
+  const result = await SessionModel.updateOne({ _id: sessionId }, { status: "COMPLETED" });
+  return result;
+}
