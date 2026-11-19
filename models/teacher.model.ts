@@ -1,4 +1,5 @@
-import { HydratedDocument, Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
+import type { HydratedDocument } from "mongoose";
 
 // 1: Interface for teacher
 export interface Teacher {
