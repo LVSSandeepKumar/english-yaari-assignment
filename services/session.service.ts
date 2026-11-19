@@ -2,10 +2,12 @@ import { Types } from "mongoose";
 import type { Session } from "../models/session.model.js";
 import { SessionModel, SessionStatus } from "../models/session.model.js";
 import { TeacherModel } from "../models/teacher.model.js";
-import { getDayRange } from "../utils/dateUtils.js";
+import { UserModel } from "../models/user.model.js";
 
 import { throwClientError } from "../utils/error/throwClientError.js";
-import { UserModel } from "../models/user.model.js";
+import { getDayRange } from "../utils/dateUtils.js";
+
+import { withTeacherPipeline } from "../pipelines/withTeacher.js";
 
 type CreateSessionPayload = Pick<Session, "teacherId" | "startTime" | "endTime">;
 export async function createSession(payload: CreateSessionPayload) {
@@ -39,30 +41,7 @@ export async function findAvailableSessions(dateTimeStamp: number, sort: string)
         startTime: sortValue,
       },
     },
-    {
-      $lookup: {
-        from: "teachers",
-        localField: "teacherId",
-        foreignField: "_id",
-        as: "teacher",
-      },
-    },
-    {
-      $unwind: "$teacher",
-    },
-    {
-      $project: {
-        _id: 1,
-        startTime: 1,
-        endTime: 1,
-        status: 1,
-        teacher: {
-          _id: "$teacher._id",
-          fullName: "$teacher.fullName",
-          email: "$teacher.email",
-        },
-      },
-    },
+    ...withTeacherPipeline,
   ]);
 
   return result;
@@ -70,13 +49,13 @@ export async function findAvailableSessions(dateTimeStamp: number, sort: string)
 
 export async function bookSession(sessionId: string, userId: string) {
   throwClientError(
-    !sessionId || typeof sessionId !== "string" || !new Types.ObjectId(sessionId),
+    !sessionId || typeof sessionId !== "string" || !Types.ObjectId.isValid(sessionId),
     "Invalid sessionId",
     400,
     "INVALID_PAYLOAD",
   );
   throwClientError(
-    !userId || typeof sessionId !== "string" || !new Types.ObjectId(userId),
+    !userId || typeof sessionId !== "string" || !Types.ObjectId.isValid(userId),
     "Invalid userId",
     400,
     "INVALID_PAYLOAD",
@@ -101,7 +80,7 @@ export async function bookSession(sessionId: string, userId: string) {
 
 export async function completeSession(sessionId: string) {
   throwClientError(
-    !sessionId || typeof sessionId !== "string" || !new Types.ObjectId(sessionId),
+    !sessionId || typeof sessionId !== "string" || !Types.ObjectId.isValid(sessionId),
     "Invalid sessionId",
     400,
     "INVALID_PAYLOAD",
