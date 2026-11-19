@@ -1,11 +1,14 @@
-import { TeacherModel } from "../models/teacher.model.js";
-import { SessionModel, SessionStatus } from "../models/session.model.js";
+import { Types } from "mongoose";
 import type { Session } from "../models/session.model.js";
+import { SessionModel, SessionStatus } from "../models/session.model.js";
+import { TeacherModel } from "../models/teacher.model.js";
 import { getDayRange } from "../utils/dateUtils.js";
 
 import { throwClientError } from "../utils/error/throwClientError.js";
+import { UserModel } from "../models/user.model.js";
 
-export async function createSession(payload: Session) {
+type CreateSessionPayload = Pick<Session, "teacherId" | "startTime" | "endTime">;
+export async function createSession(payload: CreateSessionPayload) {
   const { teacherId, startTime, endTime } = payload;
 
   const now = new Date();
@@ -62,5 +65,36 @@ export async function findAvailableSessions(dateTimeStamp: number, sort: string)
     },
   ]);
 
+  return result;
+}
+
+export async function bookSession(sessionId: string, userId: string) {
+  throwClientError(
+    !sessionId || typeof sessionId !== "string" || !new Types.ObjectId(sessionId),
+    "Invalid sessionId",
+    400,
+    "INVALID_PAYLOAD",
+  );
+  throwClientError(
+    !userId || typeof sessionId !== "string" || !new Types.ObjectId(userId),
+    "Invalid userId",
+    400,
+    "INVALID_PAYLOAD",
+  );
+
+  const existingUser = await UserModel.findById(userId);
+  throwClientError(!existingUser, "User not found", 404, "USER_NOT_FOUND");
+
+  const existingSession = await SessionModel.findById(sessionId);
+  throwClientError(!existingSession, "Session not found", 404, "SESSION_NOT_FOUND");
+
+  throwClientError(
+    existingSession?.status !== "AVAILABLE",
+    "Sorry, the session you are trying to book is not available",
+    400,
+    "SESSION_NOT_AVAILABLE",
+  );
+
+  const result = await SessionModel.updateOne({ _id: sessionId }, { status: "BOOKED", userId });
   return result;
 }

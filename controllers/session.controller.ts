@@ -1,6 +1,5 @@
-import type { Request, Response, NextFunction } from "express";
-import { createSession, findAvailableSessions } from "../services/session.service.js";
-import type { SessionDocument } from "../models/session.model.js";
+import type { NextFunction, Request, Response } from "express";
+import { bookSession, createSession, findAvailableSessions } from "../services/session.service.js";
 import { throwClientError } from "../utils/error/throwClientError.js";
 
 export async function createSessionController(req: Request, res: Response, next: NextFunction) {
@@ -37,6 +36,24 @@ export async function findAvailableSessionsController(req: Request, res: Respons
     res.status(200).json({
       success: true,
       message: "Available sessions found",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function bookSessionController(req: Request, res: Response, next: NextFunction) {
+  try {
+    let sessionId = req.params.id;
+
+    // Generally read from authentication session and not body for improved security
+    const { userId } = req.body;
+
+    const result = await bookSession(sessionId, userId);
+    res.status(200).json({
+      success: true,
+      message: "Session booked successfully",
       data: result,
     });
   } catch (error) {
