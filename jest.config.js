@@ -5,7 +5,8 @@ export default {
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   extensionsToTreatAsEsm: [".ts"],
   moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1", // "./db.js" resolves to db.ts
+    "^\\.{1,2}/(.*/)?logger/logger\\.js$": "<rootDir>/tests/helpers/logger.mock.ts",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   transform: {
     "^.+\\.ts$": [
