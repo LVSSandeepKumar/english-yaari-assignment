@@ -1,5 +1,8 @@
+import { logger } from "./logger/logger.js";
+
 // Start and end of the UTC day for a given timestamp
 export const getDayRange = (timestamp: number) => {
+  logger.info("Entering get day range util service", { timestamp });
   // Accept seconds or milliseconds
   const timestampMs = timestamp < 1e12 ? timestamp * 1000 : timestamp;
 
