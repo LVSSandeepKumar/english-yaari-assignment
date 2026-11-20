@@ -8,6 +8,7 @@ dotenv.config();
 // Local imports
 import { connectDB } from "./config/db.js";
 import { errorMiddleware } from "./middleware/error.middleware.js";
+import { logger } from "./utils/logger/logger.js";
 
 // Route imports
 import userRoutes from "./routes/user.routes.js";
@@ -30,12 +31,16 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 const start = async () => {
-  await connectDB();
+  try {
+    await connectDB();
 
-  // Listen to app server
-  app.listen("4949", () => {
-    console.log(`Server listening on port 4949`);
-  });
+    // Listen to app server
+    app.listen("4949", () => {
+      logger.info(`Server listening on port 4949`);
+    });
+  } catch (error: any) {
+    logger.error(error.message, error);
+  }
 };
 
 app.use(errorMiddleware);

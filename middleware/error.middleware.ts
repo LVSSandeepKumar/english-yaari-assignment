@@ -1,8 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import { ClientError } from "../config/clientError.js";
+import { logger } from "../utils/logger/logger.js";
 
 export function errorMiddleware(err: Error, req: Request, res: Response, next: NextFunction) {
-  console.error(err);
+  logger.error(err.message, err); 
 
   // If known client error, throw custom status code and message
   if (err instanceof ClientError && err.isClientError) {

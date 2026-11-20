@@ -6,8 +6,10 @@ import { SessionModel, SessionStatus } from "../models/session.model.js";
 import { throwClientError } from "../utils/error/throwClientError.js";
 
 import { withTeacherPipeline } from "../pipelines/withTeacher.js";
+import { logger } from "../utils/logger/logger.js";
 
 export async function createUser(payload: User) {
+  logger.info("Entering create user service", { ...payload }); // {...payload} instead of payload to avoid type errors
   const { fullName, email, phone } = payload;
   const existingUser = await UserModel.findOne({
     email,
@@ -19,6 +21,7 @@ export async function createUser(payload: User) {
 }
 
 export async function findUserSessions(userId: string) {
+  logger.info("Entering find user sessions service", { userId });
   throwClientError(
     !userId || typeof userId !== "string" || !Types.ObjectId.isValid(userId),
     "Invalid userId",
@@ -37,10 +40,14 @@ export async function findUserSessions(userId: string) {
     {
       $facet: {
         upcoming: [{ $match: { status: SessionStatus.BOOKED } }, { $sort: { startTime: 1 } }, ...withTeacherPipeline],
-        completed: [{ $match: { status: SessionStatus.COMPLETED } }, { $sort: { startTime: 1 } }, ...withTeacherPipeline],
+        completed: [
+          { $match: { status: SessionStatus.COMPLETED } },
+          { $sort: { startTime: 1 } },
+          ...withTeacherPipeline,
+        ],
       },
     },
   ]);
 
-  return result; 
+  return result;
 }

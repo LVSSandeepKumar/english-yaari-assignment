@@ -8,9 +8,11 @@ import { throwClientError } from "../utils/error/throwClientError.js";
 import { getDayRange } from "../utils/dateUtils.js";
 
 import { withTeacherPipeline } from "../pipelines/withTeacher.js";
+import { logger } from "../utils/logger/logger.js";
 
 type CreateSessionPayload = Pick<Session, "teacherId" | "startTime" | "endTime">;
 export async function createSession(payload: CreateSessionPayload) {
+  logger.info("Entering create session service", payload);
   const { teacherId, startTime, endTime } = payload;
 
   const now = new Date();
@@ -26,6 +28,7 @@ export async function createSession(payload: CreateSessionPayload) {
 }
 
 export async function findAvailableSessions(dateTimeStamp: number, sort: string) {
+  logger.info("Entering find available sessions service", { dateTimeStamp, sort });
   const { dayStart, dayEnd } = getDayRange(dateTimeStamp);
   const sortValue = sort === "desc" ? -1 : 1;
 
@@ -48,6 +51,7 @@ export async function findAvailableSessions(dateTimeStamp: number, sort: string)
 }
 
 export async function bookSession(sessionId: string, userId: string) {
+  logger.info("Entering book session service", { sessionId, userId });
   throwClientError(
     !sessionId || typeof sessionId !== "string" || !Types.ObjectId.isValid(sessionId),
     "Invalid sessionId",
@@ -79,6 +83,7 @@ export async function bookSession(sessionId: string, userId: string) {
 }
 
 export async function completeSession(sessionId: string) {
+  logger.info("Entering complete session service", { sessionId });
   throwClientError(
     !sessionId || typeof sessionId !== "string" || !Types.ObjectId.isValid(sessionId),
     "Invalid sessionId",
