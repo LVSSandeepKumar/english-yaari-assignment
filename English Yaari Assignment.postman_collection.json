@@ -1,0 +1,185 @@
+{
+  "info": {
+    "_postman_id": "425bc109-e1ca-45e2-a1d5-3ad26b7559c7",
+    "name": "English Yaari Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29949280",
+    "_collection_link": "https://go.postman.co/collection/29949280-425bc109-e1ca-45e2-a1d5-3ad26b7559c7?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"fullName\": \"Sandeep\",\r\n    \"email\": \"lala@l.i\",\r\n    \"phone\": \"8184926683\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4949/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4949",
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find User Sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4949/api/users/6afdd7481127732dfa3214be/sessions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4949",
+              "path": [
+                "api",
+                "users",
+                "6afdd7481127732dfa3214be",
+                "sessions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Session",
+      "item": [
+        {
+          "name": "Create Session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"teacherId\": \"6afde168b573b546e45642a0\", \r\n    \"startTime\": \"2026-11-20T10:00:00.000Z\",\r\n    \"endTime\": \"2026-11-20T11:30:00.000Z\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4949/api/sessions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4949",
+              "path": [
+                "api",
+                "sessions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Find Available Sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4949/api/sessions/available?dateTimeStamp=1795115881552&sort=desc",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4949",
+              "path": [
+                "api",
+                "sessions",
+                "available"
+              ],
+              "query": [
+                {
+                  "key": "dateTimeStamp",
+                  "value": "1795115881552"
+                },
+                {
+                  "key": "sort",
+                  "value": "desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Book Session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userId\": \"622222622222622222622222\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4949/api/sessions/6afde1df2dcd6cf2e8a13c25/book",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4949",
+              "path": [
+                "api",
+                "sessions",
+                "6afde1df2dcd6cf2e8a13c25",
+                "book"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Session",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4949/api/sessions/6afde1df2dcd6cf2e8a13c25/complete",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4949",
+              "path": [
+                "api",
+                "sessions",
+                "6afde1df2dcd6cf2e8a13c25",
+                "complete"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
