@@ -36,7 +36,7 @@ export async function findAvailableSessions(dateTimeStamp: number, sort: string)
     {
       $match: {
         status: SessionStatus.AVAILABLE,
-        startTime: { $gte: dayStart, $lte: dayEnd },
+        startTime: { $gte: dayStart, $lt: dayEnd },
       },
     },
     {
@@ -59,7 +59,7 @@ export async function bookSession(sessionId: string, userId: string) {
     "INVALID_PAYLOAD",
   );
   throwClientError(
-    !userId || typeof sessionId !== "string" || !Types.ObjectId.isValid(userId),
+    !userId || typeof userId !== "string" || !Types.ObjectId.isValid(userId),
     "Invalid userId",
     400,
     "INVALID_PAYLOAD",
@@ -101,6 +101,6 @@ export async function completeSession(sessionId: string) {
     "INVALID_SESSION",
   );
 
-  const result = await SessionModel.updateOne({ _id: sessionId }, { status: "COMPLETED" });
+  const result = await SessionModel.updateOne({ _id: sessionId }, { status: "COMPLETED", completedAt: new Date() });
   return result;
 }

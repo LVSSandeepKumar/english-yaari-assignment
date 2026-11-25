@@ -16,8 +16,13 @@ export async function createUser(payload: User) {
   });
   throwClientError(existingUser, `User with this email ${email} already exists`, 409, "EMAIL_ALREADY_EXISTS", payload);
 
-  const result = await UserModel.create(payload);
-  return result;
+  try {
+    const result = await UserModel.create(payload);
+    return result;
+  } catch (err: any) {
+    throwClientError(err?.code === 11000, `User with this email ${email} already exists`, 409, "EMAIL_ALREADY_EXISTS");
+    throw err;
+  }
 }
 
 export async function findUserSessions(userId: string) {
